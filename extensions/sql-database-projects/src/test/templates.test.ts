@@ -30,8 +30,6 @@ describe('Templates: loading templates from disk', function (): void {
 
 		// check everything has a value
 
-		should(templates.newSqlProjectTemplate).not.equal(undefined);
-
 		for (const obj of templates.projectScriptTypes()) {
 			should(obj.templateScript).not.equal(undefined);
 		}

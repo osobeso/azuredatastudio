@@ -8,9 +8,6 @@ import * as constants from '../common/constants';
 import { promises as fs } from 'fs';
 import { ItemType } from 'sqldbproj';
 
-export let newSqlProjectTemplate: string;
-export let newSdkSqlProjectTemplate: string;
-
 // Object maps
 
 let scriptTypeMap: Map<string, ProjectScriptType> = new Map();
@@ -37,8 +34,6 @@ export async function loadTemplates(templateFolderPath: string) {
 	reset();
 
 	await Promise.all([
-		Promise.resolve(newSqlProjectTemplate = await loadTemplate(templateFolderPath, 'newSqlProjectTemplate.xml')),
-		Promise.resolve(newSdkSqlProjectTemplate = await loadTemplate(templateFolderPath, 'newSdkSqlProjectTemplate.xml')),
 		loadObjectTypeInfo(ItemType.script, constants.scriptFriendlyName, templateFolderPath, 'newTsqlScriptTemplate.sql'),
 		loadObjectTypeInfo(ItemType.table, constants.tableFriendlyName, templateFolderPath, 'newTsqlTableTemplate.sql'),
 		loadObjectTypeInfo(ItemType.view, constants.viewFriendlyName, templateFolderPath, 'newTsqlViewTemplate.sql'),

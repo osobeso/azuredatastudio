@@ -20,6 +20,7 @@ import { IExtensionDescription } from 'vs/platform/extensions/common/extensions'
 import { ILogService } from 'vs/platform/log/common/log';
 import { onUnexpectedError } from 'vs/base/common/errors';
 import { SqlMainContext } from 'vs/workbench/api/common/extHost.protocol';
+import { ChartData } from 'chart.js';
 
 class ModelBuilderImpl implements azdata.ModelBuilder {
 	private nextComponentId: number;
@@ -2285,11 +2286,11 @@ class ChartComponentWrapper<T extends azdata.ChartOptions> extends ComponentWrap
 		return this.properties['chartType'];
 	}
 
-	public set data(v: azdata.ChartData) {
+	public set data(v: ChartData) {
 		this.setProperty('data', v);
 	}
 
-	public get data(): azdata.ChartData {
+	public get data(): ChartData {
 		return this.properties['data'];
 	}
 

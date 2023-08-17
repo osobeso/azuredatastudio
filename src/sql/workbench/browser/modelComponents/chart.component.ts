@@ -5,6 +5,7 @@
 import { Component, Input, Inject, ChangeDetectorRef, forwardRef, OnDestroy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 
 import * as azdata from 'azdata';
+import { ChartData } from 'chart.js';
 import { ComponentBase } from 'sql/workbench/browser/modelComponents/componentBase';
 import { IComponent, IComponentDescriptor, IModelStore } from 'sql/platform/dashboard/browser/interfaces';
 import { Chart } from 'sql/base/browser/ui/chart/chart.component';
@@ -20,7 +21,7 @@ export default class ChartComponent<T extends azdata.ChartOptions> extends Compo
 	@Input() descriptor: IComponentDescriptor;
 	@Input() modelStore: IModelStore;
 
-	@ViewChild(Chart) private _chart: Chart<T>;
+	@ViewChild(Chart) private _chart: Chart/*<T>*/;
 
 	constructor(
 		@Inject(forwardRef(() => ChangeDetectorRef)) changeRef: ChangeDetectorRef,
@@ -54,7 +55,7 @@ export default class ChartComponent<T extends azdata.ChartOptions> extends Compo
 		return this.getProperties().chartType ?? undefined;
 	}
 
-	public get data(): azdata.ChartData | undefined {
+	public get data(): ChartData | undefined {
 		return this.getProperties().data ?? undefined;
 	}
 

@@ -14,7 +14,7 @@ export class SelectOperationPage extends BasePage {
 	private extractRadioButton: azdata.RadioButtonComponent;
 	private importRadioButton: azdata.RadioButtonComponent;
 	private exportRadioButton: azdata.RadioButtonComponent;
-	private chart: azdata.ChartComponent<azdata.DoughnutChartOptions>;
+	private chart: azdata.ChartComponent<azdata.BarChartConfiguration, azdata.ChartPoint, azdata.BarChartData, azdata.BarChartOptions>;
 	private form: azdata.FormContainer;
 
 	public constructor(instance: DataTierApplicationWizard, wizardPage: azdata.window.WizardPage, model: DacFxDataModel, view: azdata.ModelView) {
@@ -54,32 +54,28 @@ export class SelectOperationPage extends BasePage {
 	private async createChart(): Promise<azdata.FormComponent> {
 		this.chart = this.view.modelBuilder.chart()
 			.withProps({
-				chartType: 'doughnut',
-				data: {
+				chartType: 'bar',
+				configuration: {
+					chartTitle: 'Test Chart Title',
 					datasets: [
 						{
 							data: [2, 3, 4],
 							backgroundColor: '#FF8888',
 							borderColor: '#FF0000',
-							label: 'by one'
+							seriesLabel: 'by one'
 						},
 						{
 							data: [3.5, 4, 4.5],
 							backgroundColor: '#88FF88',
 							borderColor: '#00FF00',
-							label: 'by half'
+							seriesLabel: 'by half'
 						}
 					],
-					labels: ['Un', 'Deux', 'Trois'],
-					xLabels: ['Uno', 'Dos', 'Tres'],
-					yLabels: ['Ein', 'Zwei', 'Drei']
+					options: {
+
+					},
 				}
 			}).component();
-		//this.chart.
-
-		this.chart.options = {
-
-		};
 
 		return {
 			component: this.chart,

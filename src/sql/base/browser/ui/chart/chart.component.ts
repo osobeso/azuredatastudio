@@ -6,7 +6,7 @@ import { Component, Inject, forwardRef, ChangeDetectorRef } from '@angular/core'
 import * as chartjs from 'chart.js';
 import { mixin } from 'sql/base/common/objects';
 import { Disposable } from 'vs/base/common/lifecycle';
-//import { BubbleChartPoint, ChartOptions, ScatterChartPoint } from 'azdata';
+import { ChartData, ChartPoint, ChartConfiguration } from 'azdata';
 
 @Component({
 	selector: 'chart-component',
@@ -14,14 +14,9 @@ import { Disposable } from 'vs/base/common/lifecycle';
 })
 
 //export class Chart<T extends ChartOptions> extends Disposable {
-export class Chart extends Disposable {
-	private _chartData: chartjs.ChartData;
-	// private _labels: string[];
+export class Chart<T extends ChartConfiguration> extends Disposable {
 	private _type: any;
-	// private _data: number[] | BubbleChartPoint[] | ScatterChartPoint[];
-	// private _colors: string | string[];
-	// private _label: string;
-	// private _borderColor: string | string[];
+	private _configuration: T;
 	public chart: any;
 
 	private _options: any = {
@@ -52,20 +47,8 @@ export class Chart extends Disposable {
 		this._changeRef.detectChanges();
 	}
 
-	public set data(val: chartjs.ChartData) {
-		this._chartData = val;
-		// if (val.labels) {
-		// 	this._labels = val.labels;
-		// }
-		// if (val.colors) {
-		// 	this._colors = val.colors;
-		// }
-		// if (val.label) {
-		// 	this._label = val.label;
-		// }
-		// if (val.borderColor) {
-		// 	this._borderColor = val.borderColor;
-		// }
+	public set data(val: T) {
+		this._configuration = val;
 	}
 
 	public set options(val: any) {
@@ -75,12 +58,29 @@ export class Chart extends Disposable {
 		this.drawChart();
 	}
 
+	private convert(): chartjs.ChartData {
+		const result: chartjs.ChartData = {
+			datasets: [],
+		}
+
+		for (let set of this._configuration.datasets) {
+			result.datasets.push({
+				data: set.data.map(val => val.x),
+				backgroundColor: set.backgroundColor,
+				borderColor: set.borderColor,
+				label: set.seriesLabel
+			});
+		}
+
+		return result;
+	}
+
 	public drawChart() {
-		this.chart = new chartjs.Chart("MyChart", {
+		this.chart = new chartjs.Chart(this._configuration.chartTitle, {
 			type: this._type,
 			plugins: [plugin],
-			data: this._chartData,
-			options: this._options
+			data: this.convert(),
+			options: this._options,
 		});
 	}
 }

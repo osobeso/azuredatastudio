@@ -5,7 +5,6 @@
 import { Component, Input, Inject, ChangeDetectorRef, forwardRef, OnDestroy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 
 import * as azdata from 'azdata';
-import { ChartData } from 'chart.js';
 import { ComponentBase } from 'sql/workbench/browser/modelComponents/componentBase';
 import { IComponent, IComponentDescriptor, IModelStore } from 'sql/platform/dashboard/browser/interfaces';
 import { Chart } from 'sql/base/browser/ui/chart/chart.component';
@@ -16,12 +15,15 @@ import { ILogService } from 'vs/platform/log/common/log';
 	templateUrl: decodeURI(require.toUrl('./chart.component.html'))
 })
 
-export default class ChartComponent<T extends azdata.ChartOptions> extends ComponentBase<azdata.ChartComponentProperties<T>> implements IComponent, OnDestroy, AfterViewInit {
+export default class ChartComponent<TConfig extends azdata.ChartConfiguration<TVal, TData, TOptions>,
+	TVal extends azdata.ChartPoint,
+	TData extends azdata.ChartDataSet<TVal>,
+	TOptions extends azdata.ChartOptions> extends ComponentBase<azdata.ChartComponentProperties<TConfig, TVal, TData, TOptions>> implements IComponent, OnDestroy, AfterViewInit {
 
 	@Input() descriptor: IComponentDescriptor;
 	@Input() modelStore: IModelStore;
 
-	@ViewChild(Chart) private _chart: Chart/*<T>*/;
+	@ViewChild(Chart) private _chart: Chart<TConfig, TVal, TData, TOptions>;
 
 	constructor(
 		@Inject(forwardRef(() => ChangeDetectorRef)) changeRef: ChangeDetectorRef,
@@ -43,11 +45,10 @@ export default class ChartComponent<T extends azdata.ChartOptions> extends Compo
 		if (this.chartType) {
 			this._chart.type = this.chartType;
 		}
-		if (this.data) {
-			this._chart.data = this.data;
-		}
-		if (this.options) {
-			this._chart.options = this.options;
+		if (this.configuration) {
+			this._chart.configuration.chartTitle = this.configuration.chartTitle;
+			this._chart.configuration.options = this.configuration.options;
+			this._chart.configuration.datasets = this.configuration.datasets;
 		}
 	}
 
@@ -55,12 +56,8 @@ export default class ChartComponent<T extends azdata.ChartOptions> extends Compo
 		return this.getProperties().chartType ?? undefined;
 	}
 
-	public get data(): ChartData | undefined {
-		return this.getProperties().data ?? undefined;
-	}
-
-	public get options(): T {
-		return this.getProperties().options;
+	public get configuration(): azdata.ChartConfiguration<TVal, TData, TOptions> | undefined {
+		return this.getProperties().configuration ?? undefined;
 	}
 
 	public setLayout(layout: any): void {

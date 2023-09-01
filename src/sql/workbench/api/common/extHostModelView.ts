@@ -20,7 +20,6 @@ import { IExtensionDescription } from 'vs/platform/extensions/common/extensions'
 import { ILogService } from 'vs/platform/log/common/log';
 import { onUnexpectedError } from 'vs/base/common/errors';
 import { SqlMainContext } from 'vs/workbench/api/common/extHost.protocol';
-import { ChartData } from 'chart.js';
 
 class ModelBuilderImpl implements azdata.ModelBuilder {
 	private nextComponentId: number;
@@ -290,9 +289,12 @@ class ModelBuilderImpl implements azdata.ModelBuilder {
 		return builder;
 	}
 
-	chart<T extends azdata.ChartOptions>(): azdata.ComponentBuilder<azdata.ChartComponent<T>, azdata.ChartComponentProperties<T>> {
+	chart<TConfig extends azdata.ChartConfiguration<TVal, TData, TOptions>,
+		TVal extends azdata.ChartPoint,
+		TData extends azdata.ChartDataSet<TVal>,
+		TOptions extends azdata.ChartOptions>(): azdata.ComponentBuilder<azdata.ChartComponent<TConfig, TVal, TData, TOptions>, azdata.ChartComponentProperties<TConfig, TVal, TData, TOptions>> {
 		let id = this.getNextComponentId();
-		let builder: ComponentBuilderImpl<azdata.ChartComponent<T>, azdata.ChartComponentProperties<T>> = this.getComponentBuilder(new ChartComponentWrapper<T>(this._proxy, this._handle, id, this.logService), id);
+		let builder: ComponentBuilderImpl<azdata.ChartComponent<TConfig, TVal, TData, TOptions>, azdata.ChartComponentProperties<TConfig, TVal, TData, TOptions>> = this.getComponentBuilder(new ChartComponentWrapper<TConfig, TVal, TData, TOptions>(this._proxy, this._handle, id, this.logService), id);
 		this._componentBuilders.set(id, builder);
 		return builder;
 	}
@@ -2270,7 +2272,10 @@ class GroupContainerComponentWrapper extends ComponentWrapper implements azdata.
 	}
 }
 
-class ChartComponentWrapper<T extends azdata.ChartOptions> extends ComponentWrapper implements azdata.ChartComponent<T> {
+class ChartComponentWrapper<TConfig extends azdata.ChartConfiguration<TVal, TData, TOptions>,
+	TVal extends azdata.ChartPoint,
+	TData extends azdata.ChartDataSet<TVal>,
+	TOptions extends azdata.ChartOptions> extends ComponentWrapper implements azdata.ChartComponent<TConfig, TVal, TData, TOptions> {
 	constructor(proxy: MainThreadModelViewShape, handle: number, id: string, logService: ILogService) {
 		super(proxy, handle, ModelComponentTypes.Chart, id, logService);
 		this.properties = {};
@@ -2286,20 +2291,12 @@ class ChartComponentWrapper<T extends azdata.ChartOptions> extends ComponentWrap
 		return this.properties['chartType'];
 	}
 
-	public set data(v: ChartData) {
-		this.setProperty('data', v);
+	public get configuration(): TConfig {
+		return this.properties['configuration'];
 	}
 
-	public get data(): ChartData {
-		return this.properties['data'];
-	}
-
-	public set options(v: T) {
-		this.setProperty('options', v);
-	}
-
-	public get options(): T {
-		return this.properties['options'];
+	public set configuration(v: TConfig) {
+		this.setProperty('configuration', v);
 	}
 
 	public get onDidClick(): vscode.Event<azdata.ChartClickEvent> {

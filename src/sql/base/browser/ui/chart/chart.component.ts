@@ -6,7 +6,7 @@ import { Component, Inject, forwardRef, ChangeDetectorRef } from '@angular/core'
 import * as chartjs from 'chart.js';
 import { mixin } from 'sql/base/common/objects';
 import { Disposable } from 'vs/base/common/lifecycle';
-import { ChartData, ChartPoint, ChartConfiguration } from 'azdata';
+import { ChartDataSet, ChartPoint, ChartConfiguration, ChartOptions } from 'azdata';
 
 @Component({
 	selector: 'chart-component',
@@ -14,9 +14,12 @@ import { ChartData, ChartPoint, ChartConfiguration } from 'azdata';
 })
 
 //export class Chart<T extends ChartOptions> extends Disposable {
-export class Chart<T extends ChartConfiguration> extends Disposable {
+export class Chart<TConfig extends ChartConfiguration<TVal, TData, TOptions>,
+	TVal extends ChartPoint,
+	TData extends ChartDataSet<TVal>,
+	TOptions extends ChartOptions> extends Disposable {
 	private _type: any;
-	private _configuration: T;
+	private _configuration: TConfig;
 	public chart: any;
 
 	private _options: any = {
@@ -47,7 +50,7 @@ export class Chart<T extends ChartConfiguration> extends Disposable {
 		this._changeRef.detectChanges();
 	}
 
-	public set data(val: T) {
+	public set configuration(val: TConfig) {
 		this._configuration = val;
 	}
 

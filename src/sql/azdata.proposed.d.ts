@@ -2010,41 +2010,60 @@ declare module 'azdata' {
 	export type ChartType = 'bar' | 'bubble' | 'doughnut' | 'horizontalBar' | 'line' | 'pie' | 'polarArea' | 'radar' | 'scatter';
 
 	export interface ModelBuilder {
-		chart<T extends ChartOptions>(): ComponentBuilder<ChartComponent<T>, ChartComponentProperties<T>>;
+		chart<TConfig extends ChartConfiguration<TVal, TData, TOptions>,
+			TVal extends ChartPoint,
+			TData extends ChartDataSet<TVal>,
+			TOptions extends ChartOptions>(): ComponentBuilder<ChartComponent<TConfig, TVal, TData, TOptions>, ChartComponentProperties<TConfig, TVal, TData, TOptions>>;
 	}
 
-	export interface ChartComponentProperties<T extends ChartOptions> extends ComponentProperties {
+	export interface ChartComponentProperties<
+		TConfig extends ChartConfiguration<TVal, TData, TOptions>,
+		TVal extends ChartPoint,
+		TData extends ChartDataSet<TVal>,
+		TOptions extends ChartOptions> extends ComponentProperties {
 		chartType: ChartType;
-		data: chartjs.ChartData;
-		options?: T;
+		configuration: TConfig;
 	}
 
-	export interface BubbleChartPoint {
+	export interface ChartConfiguration<TVal extends ChartPoint, TDataSet extends ChartDataSet<TVal>, TOptions extends ChartOptions> {
+		chartTitle: string;
+		datasets: TDataSet[];
+		options: TOptions;
+	}
+
+	export interface BarChartConfiguration extends ChartConfiguration<ChartPoint, BarChartData, BarChartOptions> {
+		chartTitle: string;
+		datasets: BarChartData[];
+		options: BarChartOptions;
+	}
+
+	export interface ChartDataSet<TVal extends ChartPoint> {
+		data: TVal[] | number[];
+		backgroundColor: string;
+		borderColor: string;
+		seriesLabel: string;
+	}
+
+	export interface BarChartData extends ChartDataSet<ChartPoint> {
+	}
+
+	export interface ScatterplotData extends ChartDataSet<ScatterplotPoint> {
+	}
+
+	export interface BubbleChartData extends ChartDataSet<BubbleChartPoint> {
+	}
+
+	export interface ChartPoint {
 		x: number;
+	}
+
+	export interface ScatterplotPoint extends ChartPoint {
 		y: number;
+	}
+
+	export interface BubbleChartPoint extends ScatterplotPoint {
 		r: number;
 	}
-
-	export interface ScatterChartPoint {
-		x: number;
-		y: number;
-	}
-
-	export interface ChartDataPoint {
-		data: number[] | BubbleChartPoint | ScatterChartPoint;
-	}
-
-	export interface ChartData1D {
-
-	}
-
-	// export interface ChartData {
-	// 	label?: string;
-	// 	dataset: number[] | BubbleChartPoint[] | ScatterChartPoint[];
-	// 	labels?: string[];
-	// 	colors?: string[];
-	// 	borderColor?: string[];
-	// }
 
 	export interface ChartOptions {
 
@@ -2057,6 +2076,7 @@ declare module 'azdata' {
 		offset?: boolean;
 		stacked?: boolean;
 	}
+
 	export interface BarChartOptions extends ChartOptions {
 		scales?: {
 			x?: ScaleOptions;
@@ -2132,7 +2152,10 @@ declare module 'azdata' {
 
 	export type ChartClickEvent = { label: string };
 
-	export interface ChartComponent<T extends ChartOptions> extends Component, ChartComponentProperties<T> {
+	export interface ChartComponent<TConfig extends ChartConfiguration<TVal, TData, TOptions>,
+		TVal extends ChartPoint,
+		TData extends ChartDataSet<TVal>,
+		TOptions extends ChartOptions> extends Component, ChartComponentProperties<TConfig, TVal, TData, TOptions> {
 		onDidClick: vscode.Event<ChartClickEvent>;
 	}
 

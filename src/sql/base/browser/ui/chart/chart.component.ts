@@ -50,8 +50,12 @@ export class Chart<TConfig extends ChartConfiguration<TVal, TData, TOptions>,
 		this._changeRef.detectChanges();
 	}
 
-	public set configuration(val: TConfig) {
-		this._configuration = val;
+	public set configuration(val: any) {
+		if (val) {
+			this._configuration = mixin({}, mixin(this._configuration, val));
+		}
+
+		this.drawChart();
 	}
 
 	public set options(val: any) {
@@ -63,12 +67,12 @@ export class Chart<TConfig extends ChartConfiguration<TVal, TData, TOptions>,
 
 	private convert(): chartjs.ChartData {
 		const result: chartjs.ChartData = {
-			datasets: [],
+			datasets: []
 		}
 
 		for (let set of this._configuration.datasets) {
 			result.datasets.push({
-				data: set.data.map(val => val.x),
+				data: 'x' in set.data ? set.data.map(val => val.x) : set.data,
 				backgroundColor: set.backgroundColor,
 				borderColor: set.borderColor,
 				label: set.seriesLabel

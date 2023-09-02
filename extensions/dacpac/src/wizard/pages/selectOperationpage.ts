@@ -54,28 +54,29 @@ export class SelectOperationPage extends BasePage {
 	private async createChart(): Promise<azdata.FormComponent> {
 		this.chart = this.view.modelBuilder.chart()
 			.withProps({
-				chartType: 'bar',
-				configuration: {
-					chartTitle: 'Test Chart Title',
-					datasets: [
-						{
-							data: [2, 3, 4],
-							backgroundColor: '#FF8888',
-							borderColor: '#FF0000',
-							seriesLabel: 'by one'
-						},
-						{
-							data: [3.5, 4, 4.5],
-							backgroundColor: '#88FF88',
-							borderColor: '#00FF00',
-							seriesLabel: 'by half'
-						}
-					],
-					options: {
-
-					},
-				}
+				chartType: 'bar'
 			}).component();
+
+		this.chart.configuration = {
+			chartTitle: 'Test Chart Title',
+			datasets: [
+				{
+					data: [2, 3, 4],
+					backgroundColor: '#FF8888',
+					borderColor: '#FF0000',
+					seriesLabel: 'by one'
+				},
+				{
+					data: [3.5, 4, 4.5],
+					backgroundColor: '#88FF88',
+					borderColor: '#00FF00',
+					seriesLabel: 'by half'
+				}
+			],
+			options: {
+
+			},
+		};
 
 		return {
 			component: this.chart,

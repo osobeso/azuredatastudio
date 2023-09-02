@@ -46,6 +46,11 @@ export default class ChartComponent<TConfig extends azdata.ChartConfiguration<TV
 			this._chart.type = this.chartType;
 		}
 		if (this.configuration) {
+			this._chart.configuration = {
+				chartTitle: this.configuration.chartTitle,
+				options: this.configuration.options,
+				datasets: this.configuration.datasets
+			};
 			this._chart.configuration.chartTitle = this.configuration.chartTitle;
 			this._chart.configuration.options = this.configuration.options;
 			this._chart.configuration.datasets = this.configuration.datasets;

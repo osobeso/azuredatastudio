@@ -2022,7 +2022,7 @@ declare module 'azdata' {
 		TData extends ChartDataSet<TVal>,
 		TOptions extends ChartOptions> extends ComponentProperties {
 		chartType: ChartType;
-		configuration: TConfig;
+		configuration?: TConfig;
 	}
 
 	export interface ChartConfiguration<TVal extends ChartPoint, TDataSet extends ChartDataSet<TVal>, TOptions extends ChartOptions> {

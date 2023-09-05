@@ -58,7 +58,7 @@ export class SelectOperationPage extends BasePage {
 			}).component();
 
 		this.chart.configuration = {
-			chartTitle: 'Test Chart Title',
+			chartTitle: 'TestChartTitle',
 			datasets: [
 				{
 					data: [2, 3, 4],
@@ -74,13 +74,22 @@ export class SelectOperationPage extends BasePage {
 				}
 			],
 			options: {
-
+				scales: {
+					x: {
+						min: 0,
+						max: 10
+					},
+					y: {
+						min: 0,
+						max: 10
+					}
+				}
 			},
 		};
 
 		return {
 			component: this.chart,
-			title: 'someTitle'
+			title: 'TestChartTitle'
 		}
 	}
 

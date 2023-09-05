@@ -6,6 +6,7 @@
 // This is the place for API experiments and proposal.
 
 import * as vscode from 'vscode';
+import * as chartjs from 'chart.js';
 
 declare module 'azdata' {
 
@@ -2014,7 +2015,7 @@ declare module 'azdata' {
 
 	export interface ChartComponentProperties<T extends ChartOptions> extends ComponentProperties {
 		chartType: ChartType;
-		data: ChartData;
+		data: chartjs.ChartData;
 		options?: T;
 	}
 
@@ -2027,14 +2028,6 @@ declare module 'azdata' {
 	export interface ScatterChartPoint {
 		x: number;
 		y: number;
-	}
-
-	export interface ChartData {
-		label?: string;
-		dataset: number[] | BubbleChartPoint[] | ScatterChartPoint[];
-		labels?: string[];
-		colors?: string[];
-		borderColor?: string[];
 	}
 
 	export interface ChartOptions {

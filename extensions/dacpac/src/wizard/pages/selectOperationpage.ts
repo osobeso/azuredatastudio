@@ -14,6 +14,7 @@ export class SelectOperationPage extends BasePage {
 	private extractRadioButton: azdata.RadioButtonComponent;
 	private importRadioButton: azdata.RadioButtonComponent;
 	private exportRadioButton: azdata.RadioButtonComponent;
+	private chart: azdata.ChartComponent<azdata.BarChartOptions>;
 	private form: azdata.FormContainer;
 
 	public constructor(instance: DataTierApplicationWizard, wizardPage: azdata.window.WizardPage, model: DacFxDataModel, view: azdata.ModelView) {
@@ -25,6 +26,7 @@ export class SelectOperationPage extends BasePage {
 		let extractComponent = await this.createExtractRadioButton();
 		let importComponent = await this.createImportRadioButton();
 		let exportComponent = await this.createExportRadioButton();
+		let chartComponent = await this.createChart();
 
 		this.form = this.view.modelBuilder.formContainer()
 			.withFormItems(
@@ -32,7 +34,8 @@ export class SelectOperationPage extends BasePage {
 					deployComponent,
 					extractComponent,
 					importComponent,
-					exportComponent
+					exportComponent,
+					chartComponent
 				], {
 				horizontal: true
 			}).component();
@@ -45,6 +48,68 @@ export class SelectOperationPage extends BasePage {
 
 	async onPageEnter(): Promise<boolean> {
 		return true;
+	}
+
+	private async createChart(): Promise<azdata.FormComponent> {
+		this.chart = this.view.modelBuilder.chart()
+			.withProps({
+				chartType: 'bar',
+				data: {
+					datasets: [
+						{
+							data: [2, 3, 4],
+							backgroundColor: '#FF8888',
+							borderColor: '#FF0000',
+							label: 'by one'
+						},
+						{
+							data: [3.5, 4, 4.5],
+							backgroundColor: '#88FF88',
+							borderColor: '#00FF00',
+							label: 'by half'
+						}
+					],
+					labels: ['Un', 'Deux', 'Trois'],
+					xLabels: ['Uno', 'Dos', 'Tres'],
+					yLabels: ['Ein', 'Zwei', 'Drei'],
+
+				}
+			}).component();
+
+		this.chart.data = {
+			datasets: [
+				{
+					data: [2, 3, 4],
+					backgroundColor: '#FF8888',
+					borderColor: '#FF0000',
+					label: 'by one'
+				},
+				{
+					data: [3.5, 4, 4.5],
+					backgroundColor: '#88FF88',
+					borderColor: '#00FF00',
+					label: 'by half'
+				}
+			],
+			labels: ['Un', 'Deux', 'Trois'],
+			xLabels: ['Uno', 'Dos', 'Tres'],
+			yLabels: ['Ein', 'Zwei', 'Drei'],
+		};
+
+		this.chart.options = {
+			scales: {
+				y: {
+					min: 0,
+					beginAtZero: true,
+					max: 10
+				}
+			},
+		};
+
+		return {
+			component: this.chart,
+			title: 'someTitle'
+		}
 	}
 
 	private async createDeployRadioButton(): Promise<azdata.FormComponent> {

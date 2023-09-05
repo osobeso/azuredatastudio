@@ -6,20 +6,14 @@ import { Component, Inject, forwardRef, ChangeDetectorRef } from '@angular/core'
 import * as chartjs from 'chart.js';
 import { mixin } from 'sql/base/common/objects';
 import { Disposable } from 'vs/base/common/lifecycle';
-import { BubbleChartPoint, ChartOptions, ScatterChartPoint } from 'azdata';
 
 @Component({
 	selector: 'chart-component',
 	templateUrl: decodeURI(require.toUrl('./chart.component.html'))
 })
-export class Chart<T extends ChartOptions> extends Disposable {
-
-	private _labels: string[];
+export class Chart extends Disposable {
+	private _chartData: chartjs.ChartData;
 	private _type: any;
-	private _data: number[] | BubbleChartPoint[] | ScatterChartPoint[];
-	private _colors: string | string[];
-	private _label: string;
-	private _borderColor: string | string[];
 	public chart: any;
 
 	private _options: any = {
@@ -50,20 +44,8 @@ export class Chart<T extends ChartOptions> extends Disposable {
 		this._changeRef.detectChanges();
 	}
 
-	public set data(val: any) {
-		this._data = val.dataset;
-		if (val.labels) {
-			this._labels = val.labels;
-		}
-		if (val.colors) {
-			this._colors = val.colors;
-		}
-		if (val.label) {
-			this._label = val.label;
-		}
-		if (val.borderColor) {
-			this._borderColor = val.borderColor;
-		}
+	public set data(val: chartjs.ChartData) {
+		this._chartData = val;
 	}
 
 	public set options(val: any) {
@@ -77,17 +59,7 @@ export class Chart<T extends ChartOptions> extends Disposable {
 		this.chart = new chartjs.Chart("MyChart", {
 			type: this._type,
 			plugins: [plugin],
-			data: {
-				labels: this._labels,
-				datasets: [
-					{
-						label: this._label,
-						data: this._data,
-						backgroundColor: this._colors,
-						borderColor: this._borderColor
-					}
-				]
-			},
+			data: this._chartData,
 			options: this._options
 		});
 	}

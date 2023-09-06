@@ -2015,7 +2015,7 @@ declare module 'azdata' {
 
 	export interface ChartComponentProperties<T extends ChartOptions> extends ComponentProperties {
 		chartType: ChartType;
-		data: chartjs.ChartData;
+		data?: chartjs.ChartData;
 		options?: T;
 	}
 

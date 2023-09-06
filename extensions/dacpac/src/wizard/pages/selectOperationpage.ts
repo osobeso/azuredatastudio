@@ -56,6 +56,8 @@ export class SelectOperationPage extends BasePage {
 				chartType: 'bar'
 			}).component();
 
+		console.log('chart creation in ext');
+
 		this.chart.data = {
 			datasets: [
 				{

@@ -13,9 +13,35 @@ import { Disposable } from 'vs/base/common/lifecycle';
 })
 export class Chart extends Disposable {
 	private _chartData: chartjs.ChartData;
-	private _configuration: any;
+
+	private _configuration: any = {
+		chartTitle: 'Test Chart Please Ignore',
+		datasets: [
+			{
+				data: [2, 3, 4],
+				backgroundColor: '#FF8888',
+				borderColor: '#FF0000',
+				seriesLabel: 'by one'
+			},
+			{
+				data: [3.5, 4, 4.5],
+				backgroundColor: '#88FF88',
+				borderColor: '#00FF00',
+				seriesLabel: 'by half'
+			},
+			{
+				data: [1, 3, 5],
+				backgroundColor: '#8888FF',
+				borderColor: '#0000FF',
+				seriesLabel: 'by two'
+			}
+		],
+		// only data that aligns with a label is shown.  If fewer labels than data, then data is truncated; if more labels than data, then there's an empty entry
+		labels: ['un', 'deux', 'trois', 'quatre']
+	};
+
 	private _type: any;
-	public chart: any;
+	public chart: chartjs.Chart;
 
 	private _options: any = {
 		events: ['click', 'keyup'],
@@ -47,6 +73,7 @@ export class Chart extends Disposable {
 
 	public set data(val: chartjs.ChartData) {
 		this._chartData = val;
+		console.log('chart set data');
 		this.drawChart();
 	}
 
@@ -54,35 +81,12 @@ export class Chart extends Disposable {
 		if (val) {
 			this._options = mixin({}, mixin(this._options, val));
 		}
+		console.log('chart set options');
 		this.drawChart();
 	}
 
 	private convert(): chartjs.ChartData {
-		console.log(`num datasets: ${this._chartData.datasets.length}`);
-
-		this._configuration = {
-			datasets: [
-				{
-					data: [2, 3, 4],
-					backgroundColor: '#FF8888',
-					borderColor: '#FF0000',
-					seriesLabel: 'by one'
-				},
-				{
-					data: [3.5, 4, 4.5],
-					backgroundColor: '#88FF88',
-					borderColor: '#00FF00',
-					seriesLabel: 'by half'
-				},
-				{
-					data: [1, 3, 5],
-					backgroundColor: '#8888FF',
-					borderColor: '#0000FF',
-					seriesLabel: 'by two'
-				}
-			],
-			labels: ['un', 'deux', 'trois']
-		};
+		console.log(`chart num datasets: ${this._chartData.datasets.length}`);
 
 		const result: chartjs.ChartData = {
 			datasets: []
@@ -103,12 +107,17 @@ export class Chart extends Disposable {
 	}
 
 	public drawChart() {
-		this.chart = new chartjs.Chart("MyChart", {
-			type: this._type,
-			plugins: [plugin],
-			data: this.convert(),
-			options: this._options
-		});
+		if (this.chart) {
+			this.chart.data = this.convert();
+			this.chart.update();
+		} else {
+			this.chart = new chartjs.Chart("MyChart", {
+				type: this._type,
+				plugins: [plugin],
+				data: this.convert(),
+				options: this._options
+			});
+		}
 	}
 }
 

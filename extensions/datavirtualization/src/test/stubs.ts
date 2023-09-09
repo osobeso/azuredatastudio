@@ -597,7 +597,7 @@ export class MockModelBuilder implements azdata.ModelBuilder {
 	listView(): azdata.ComponentBuilder<azdata.ListViewComponent, azdata.ListViewComponentProperties> {
 		throw new Error('Method not implemented.');
 	}
-	chart<T extends azdata.ChartOptions, TConfig extends azdata.ChartConfiguration>(): azdata.ComponentBuilder<azdata.ChartComponent<TConfig>, azdata.ChartComponentProperties<TConfig>> {
+	chart<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions>(): azdata.ComponentBuilder<azdata.ChartComponent<TData, TOptions>, azdata.ChartComponentProperties<TData, TOptions>> {
 		throw new Error('Method not implemented.');
 	}
 	slider(): azdata.ComponentBuilder<azdata.SliderComponent, azdata.SliderComponentProperties> {

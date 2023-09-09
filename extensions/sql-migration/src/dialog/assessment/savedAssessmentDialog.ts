@@ -135,7 +135,7 @@ export class SavedAssessmentDialog {
 				}
 			}));
 
-		const barConfig: azdata.BarChartConfiguration = {
+		const barConfig: azdata.BarChartData = {
 			datasets: [
 				{
 					data: [2, 3, 4],
@@ -156,22 +156,24 @@ export class SavedAssessmentDialog {
 					dataLabel: 'By Two'
 				}
 			],
-			labels: ['uno', 'dos', 'tres', 'quatro'],
-			options: {
-				chartTitle: 'Test Bar Chart',
-				scales: {
-					x: {
-						max: 8
-					}
-				}
-			}
+			labels: ['uno', 'dos', 'tres', 'quatro']
 		};
 
-		const barChart = view.modelBuilder.chart<azdata.BarChartConfiguration>()
+		const barOptions: azdata.BarChartOptions = {
+			chartTitle: 'Test Bar Chart',
+			scales: {
+				x: {
+					max: 8
+				}
+			}
+		}
+
+		const barChart = view.modelBuilder.chart<azdata.BarChartData, azdata.BarChartOptions>()
 			.withProps({
-				chartType: 'bar',
-				configuration: barConfig,
 				chartId: 'barChart1',
+				chartType: 'bar',
+				data: barConfig,
+				options: barOptions,
 				width: '500px',
 				height: '300px'
 			}).component();
@@ -465,7 +467,7 @@ export class SavedAssessmentDialog {
 				}
 			}
 
-			const newConfig: azdata.BarChartConfiguration = {
+			const newConfig: azdata.BarChartData = {
 				...barConfig,
 				datasets: barConfig.datasets
 			};

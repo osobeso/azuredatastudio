@@ -2071,36 +2071,45 @@ declare module 'azdata' {
 	export type ChartType = 'bar' | 'bubble' | 'doughnut' | 'horizontalBar' | 'line' | 'pie' | 'polarArea' | 'radar' | 'scatter';
 
 	export interface ModelBuilder {
-		chart<TConfig extends ChartConfiguration>(): ComponentBuilder<ChartComponent<TConfig>, ChartComponentProperties<TConfig>>;
+		chart<TData extends ChartData<TOptions>, TOptions extends ChartOptions>(): ComponentBuilder<ChartComponent<TData, TOptions>, ChartComponentProperties<TData, TOptions>>;
 	}
 
-	export interface ChartComponent<TConfig extends ChartConfiguration> extends Component, ChartComponentProperties<TConfig> {
+	export interface ChartComponent<TData extends ChartData<TOptions>, TOptions extends ChartOptions> extends Component, ChartComponentProperties<TData, TOptions> {
 		onDidClick: vscode.Event<ChartClickEvent>;
 	}
 
 	export type ChartClickEvent = { label: string };
 
-	export interface ChartComponentProperties<TConfig extends ChartConfiguration> extends ComponentProperties {
+	export interface ChartComponentProperties<TData extends ChartData<TOptions>, TOptions extends ChartOptions> extends ComponentProperties {
+		/**
+		 * Unique ID for chart, used as the canvasID to render.
+		 */
+		chartId: string;
+
 		/**
 		 * Type of chart to build
 		 * @see ChartType for a list of supported chart types
 		 */
 		chartType: ChartType;
 		/**
-		 * Configuration of chart: datasets, labels (if applicable), options
+		 * Datasets and labels (if applicable) for the chart
 		 */
-		configuration: TConfig;
+		data: TData;
 
 		/**
-		 * Unique ID for chart, used as the canvasID to render.
+		 * Options for the chart configuration
 		 */
-		chartId: string;
+		options?: TOptions;
 	}
 
 	/**
-	 * Base type for chart configurations
+	 * Base type for chart data
 	 */
-	export interface ChartConfiguration { }
+	export interface ChartData<TOptions extends ChartOptions> {
+		// TOptions is a "pairs with" relationship:
+		// The unused type parameter forces ChartComponentProperties to have the correct ChartOptions type for each ChartData type.
+		// It's not part of the ChartData object so that the two properties can be updated separately through the ComponentModel system.
+	}
 
 	//#region Chart general data types
 
@@ -2223,11 +2232,10 @@ declare module 'azdata' {
 	//#region Bar/Horizontal Bar charts
 
 	/**
-	 * Configuration for a bar chart, either vertical (chartType = 'bar') or horizontal (chartType = 'horizontalBar').
+	 * Data for a bar chart, either vertical (chartType = 'bar') or horizontal (chartType = 'horizontalBar').
 	 */
-	export interface BarChartConfiguration extends ChartConfiguration {
-		datasets: BarChartData[];
-		options?: BarChartOptions;
+	export interface BarChartData extends ChartData<BarChartOptions> {
+		datasets: BarChartDataSet[];
 
 		/**
 		 * Labels for the base axis.  Only data that aligns with a label is shown.  If there are fewer labels than data, then not all data is displayed; if there are more labels than data, then empty chart entries are appended
@@ -2235,7 +2243,7 @@ declare module 'azdata' {
 		labels: string[];
 	}
 
-	export interface BarChartData extends ChartDataSet<Chart1DPoint | number> { }
+	export interface BarChartDataSet extends ChartDataSet<Chart1DPoint | number> { }
 
 	export interface BarChartOptions extends ChartOptions {
 		scales?: {
@@ -2249,11 +2257,10 @@ declare module 'azdata' {
 	//#region Line chart
 
 	/**
-	 * Configuration for a line chart
+	 * Data for a line chart
 	 */
-	export interface LineChartConfiguration extends ChartConfiguration {
-		datasets: BarChartData[];
-		options?: LineChartOptions;
+	export interface LineChartData extends ChartData<LineChartOptions> {
+		datasets: BarChartDataSet[];
 
 		/**
 		 * Labels for the base axis.  Only data that aligns with a label is shown.  If there are fewer labels than data, then not all data is displayed; if there are more labels than data, then empty chart entries are appended
@@ -2280,11 +2287,10 @@ declare module 'azdata' {
 	//#region Pie/Doughnut charts
 
 	/**
-	 * Configuration for a either a pie chart or a doughnut chart.  These are the same, but with different default values for the `cutout` option.
+	 * Data for a either a pie chart or a doughnut chart.  These are the same, but with different default values for the `cutout` option.
 	 */
-	export interface PieChartConfiguration extends ChartConfiguration {
+	export interface PieChartData extends ChartData<PieChartOptions> {
 		dataset: ChartDataEntry[];
-		options?: PieChartOptions;
 	}
 
 	export interface PieChartOptions extends ChartOptions {
@@ -2302,14 +2308,13 @@ declare module 'azdata' {
 	//#region Scatterplot
 
 	/**
-	 * Configuration for a scatter plot chart
+	 * Data for a scatter plot chart
 	 */
-	export interface ScatterplotConfiguration extends ChartConfiguration {
-		datasets: ScatterplotData[];
-		options?: ScatterplotOptions;
+	export interface ScatterplotData extends ChartData<ScatterplotOptions> {
+		datasets: ScatterplotDataSet[];
 	}
 
-	export interface ScatterplotData extends ChartDataSet<Chart2DPoint> {
+	export interface ScatterplotDataSet extends ChartDataSet<Chart2DPoint> {
 	}
 
 	export interface ScatterplotOptions extends ChartOptions {
@@ -2324,14 +2329,13 @@ declare module 'azdata' {
 	//#region Bubble chart
 
 	/**
-	 * Configuration for a bubble chart
+	 * Data for a bubble chart
 	 */
-	export interface BubbleChartConfiguration extends ChartConfiguration {
-		datasets: BubbleChartData[];
-		options: BubbleChartOptions;
+	export interface BubbleChartData extends ChartData<BubbleChartOptions> {
+		datasets: BubbleChartDataSet[];
 	}
 
-	export interface BubbleChartData extends ChartDataSet<Chart3DPoint> {
+	export interface BubbleChartDataSet extends ChartDataSet<Chart3DPoint> {
 	}
 
 	export interface BubbleChartOptions extends ScatterplotOptions {
@@ -2342,11 +2346,10 @@ declare module 'azdata' {
 	//#region Polar Area chart
 
 	/**
-	 * Configuration for a polar area chart
+	 * Data for a polar area chart
 	 */
-	export interface PolarAreaChartConfiguration extends ChartConfiguration {
+	export interface PolarAreaChartData extends ChartData<PolarAreaChartOptions> {
 		dataset: ChartDataEntry[];
-		options?: PolarAreaChartOptions;
 	}
 
 	export interface PolarAreaChartOptions extends ChartOptions {
@@ -2358,11 +2361,10 @@ declare module 'azdata' {
 	//#region Radar chart
 
 	/**
-	 * Configuration for a radar chart
+	 * Data for a radar chart
 	 */
-	export interface RadarChartConfiguration extends ChartConfiguration {
-		datasets: BarChartData[];
-		options?: RadarChartOptions;
+	export interface RadarChartData extends ChartData<RadarChartOptions> {
+		datasets: BarChartDataSet[];
 		/**
 		 * Labels for the perimeter.  Only data that aligns with a label is shown.  If there are fewer labels than data, then not all data is displayed; if there are more labels than data, then empty chart entries are appended
 		 */

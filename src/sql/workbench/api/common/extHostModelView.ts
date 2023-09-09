@@ -290,9 +290,9 @@ class ModelBuilderImpl implements azdata.ModelBuilder {
 		return builder;
 	}
 
-	chart<TConfig extends azdata.ChartConfiguration>(): azdata.ComponentBuilder<azdata.ChartComponent<TConfig>, azdata.ChartComponentProperties<TConfig>> {
+	chart<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions>(): azdata.ComponentBuilder<azdata.ChartComponent<TData, TOptions>, azdata.ChartComponentProperties<TData, TOptions>> {
 		let id = this.getNextComponentId();
-		let builder: ComponentBuilderImpl<azdata.ChartComponent<TConfig>, azdata.ChartComponentProperties<TConfig>> = this.getComponentBuilder(new ChartComponentWrapper<TConfig>(this._proxy, this._handle, id, this.logService), id);
+		let builder: ComponentBuilderImpl<azdata.ChartComponent<TData, TOptions>, azdata.ChartComponentProperties<TData, TOptions>> = this.getComponentBuilder(new ChartComponentWrapper<TData, TOptions>(this._proxy, this._handle, id, this.logService), id);
 		this._componentBuilders.set(id, builder);
 		return builder;
 	}
@@ -2280,7 +2280,7 @@ class GroupContainerComponentWrapper extends ComponentWrapper implements azdata.
 	}
 }
 
-class ChartComponentWrapper<TConfig extends azdata.ChartConfiguration> extends ComponentWrapper implements azdata.ChartComponent<TConfig> {
+class ChartComponentWrapper<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions> extends ComponentWrapper implements azdata.ChartComponent<TData, TOptions> {
 	constructor(proxy: MainThreadModelViewShape, handle: number, id: string, logService: ILogService) {
 		super(proxy, handle, ModelComponentTypes.Chart, id, logService);
 		this.properties = {};
@@ -2304,11 +2304,11 @@ class ChartComponentWrapper<TConfig extends azdata.ChartConfiguration> extends C
 		return this.properties['chartType'];
 	}
 
-	public set configuration(v: any) {
+	public set data(v: any) {
 		this.setProperty('configuration', v);
 	}
 
-	public get configuration(): any {
+	public get data(): any {
 		return this.properties['configuration'];
 	}
 

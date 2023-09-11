@@ -873,6 +873,13 @@ declare module 'azdata' {
 		selections: SelectionRange[];
 	}
 
+	export interface CopyResultsRequestResult {
+		/**
+		 * Result string from copy operation
+		 */
+		results: string;
+	}
+
 	export interface QueryProvider {
 		/**
 		 * Notify clients that the URI for a connection has been changed.
@@ -884,7 +891,7 @@ declare module 'azdata' {
 		 * ADS will use this if 'supportCopyResultsToClipboard' property is set to true in the provider contribution point in extension's package.json.
 		 * Otherwise, The default handler will load all the selected data to ADS and perform the copy operation.
 		 */
-		copyResults?(requestParams: CopyResultsRequestParams): Thenable<void>;
+		copyResults?(requestParams: CopyResultsRequestParams): Thenable<CopyResultsRequestResult>;
 	}
 
 	export enum DataProviderType {
@@ -2120,11 +2127,13 @@ declare module 'azdata' {
 		 */
 		dataLabel: string;
 		/**
-		 * Background color for chart elements
+		 * Background color for chart elements.  May be a name ('red'), hex ('#FFFFFF[77]), or RGB ('rgb(255, 255, 255[, 0.5])).
+		 * Bracketed portions are optional for alpha/transparency.
 		 */
 		backgroundColor: string;
 		/**
-		 * Border color for chart elements
+		 * Border color for chart elements.  May be a name ('red'), hex ('#FFFFFF[77]), or RGB ('rgb(255, 255, 255[, 0.5])).
+		 * Bracketed portions are optional for alpha/transparency.
 		 */
 		borderColor?: string;
 	}
@@ -2165,7 +2174,7 @@ declare module 'azdata' {
 	 */
 	export interface Chart3DPoint extends Chart2DPoint {
 		/**
-		 * Radius for a multi-dimensional data point
+		 * Radius for a bubble data point, in pixels
 		 */
 		r: number;
 	}
@@ -2175,7 +2184,7 @@ declare module 'azdata' {
 	//#region Chart general option types
 
 	/**
-	 * Base options for a char
+	 * Base options for a chart
 	 */
 	export interface ChartOptions {
 		/**

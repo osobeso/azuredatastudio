@@ -2255,7 +2255,7 @@ declare module 'azdata' {
 	/**
 	 * Data for a bar chart, either vertical (chartType = 'bar') or horizontal (chartType = 'horizontalBar').
 	 */
-	export interface BarChartData extends ChartData<'bar'> {
+	export interface BarChartData extends ChartData<'bar' | 'horizontalBar'> {
 		datasets: BarChartDataSet[];
 
 		/**
@@ -2266,7 +2266,7 @@ declare module 'azdata' {
 
 	export interface BarChartDataSet extends ChartDataSet<Chart1DPoint | number> { }
 
-	export interface BarChartOptions extends ChartOptions<'bar'> {
+	export interface BarChartOptions extends ChartOptions<'bar' | 'horizontalBar'> {
 		scales?: {
 			x?: ScaleOptions;
 			y?: ScaleOptions;
@@ -2310,11 +2310,11 @@ declare module 'azdata' {
 	/**
 	 * Data for a either a pie chart or a doughnut chart.  These are the same, but with different default values for the `cutout` option.
 	 */
-	export interface PieChartData extends ChartData<'pie'> {
+	export interface PieChartData extends ChartData<'pie' | 'doughnut'> {
 		dataset: ChartDataEntry[];
 	}
 
-	export interface PieChartOptions extends ChartOptions<'pie'> {
+	export interface PieChartOptions extends ChartOptions<'pie' | 'doughnut'> {
 		circumference?: number;
 		/**
 		 * Size of the cutout for a pie/doughnut chart.  Pie chart defaults to 0.  Doughnut chart defaults to 50%.
@@ -2338,7 +2338,7 @@ declare module 'azdata' {
 	export interface ScatterplotDataSet extends ChartDataSet<Chart2DPoint> {
 	}
 
-	export interface ScatterplotOptions extends ChartOptions<'scatter'> {
+	export interface ScatterplotOptions extends ChartOptions<'scatter' | 'bubble'> {
 		scales?: {
 			x?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
 			y?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
@@ -2357,13 +2357,6 @@ declare module 'azdata' {
 	}
 
 	export interface BubbleChartDataSet extends ChartDataSet<Chart3DPoint> {
-	}
-
-	export interface BubbleChartOptions extends ChartOptions<'scatter'> {
-		scales?: {
-			x?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
-			y?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
-		}
 	}
 
 	//#endregion

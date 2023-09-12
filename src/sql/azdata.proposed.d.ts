@@ -2126,8 +2126,8 @@ declare module 'azdata' {
 
 	export interface ChartDataEntryBase {
 		/**
-		 * For pie/doughnut/polar area charts, it the label associated with the data value
-		 * For bar/horizontalBar/Line/Scatterplot/Bubble/Radial, it is the label name for dataset
+		 * For Pie, Doughnut, Polar Area charts, it the label associated with the data value
+		 * For Bar, Horizontal Bar, Line, Scatterplot, Bubble, and Rradial, it is the label name for dataset
 		 */
 		dataLabel: string;
 		/**
@@ -2365,8 +2365,7 @@ declare module 'azdata' {
 		datasets: ScatterplotDataSet[];
 	}
 
-	export interface ScatterplotDataSet extends ChartDataSet<Chart2DPoint> {
-	}
+	export interface ScatterplotDataSet extends ChartDataSet<Chart2DPoint> { }
 
 	export interface ScatterplotOptions extends ChartOptions<'scatter' | 'bubble'> {
 		scales?: {
@@ -2386,8 +2385,9 @@ declare module 'azdata' {
 		datasets: BubbleChartDataSet[];
 	}
 
-	export interface BubbleChartDataSet extends ChartDataSet<Chart3DPoint> {
-	}
+	export interface BubbleChartDataSet extends ChartDataSet<Chart3DPoint> { }
+
+	export interface BubbleChartOptions extends ChartOptions<'bubble'> { }
 
 	//#endregion
 

@@ -2358,6 +2358,13 @@ declare module 'azdata' {
 
 	//#region Scatterplot
 
+	export interface ScatterplotOptionBase {
+		scales?: {
+			x?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
+			y?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
+		}
+	}
+
 	/**
 	 * Data for a scatter plot chart
 	 */
@@ -2367,12 +2374,7 @@ declare module 'azdata' {
 
 	export interface ScatterplotDataSet extends ChartDataSet<Chart2DPoint> { }
 
-	export interface ScatterplotOptions extends ChartOptions<'scatter' | 'bubble'> {
-		scales?: {
-			x?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
-			y?: ScaleOptions & { position?: 'left' | 'top' | 'right' | 'bottom' | 'center' };
-		}
-	}
+	export interface ScatterplotOptions extends ChartOptions<'scatter'>, ScatterplotOptionBase { }
 
 	//#endregion
 
@@ -2387,7 +2389,7 @@ declare module 'azdata' {
 
 	export interface BubbleChartDataSet extends ChartDataSet<Chart3DPoint> { }
 
-	export interface BubbleChartOptions extends ChartOptions<'bubble'> { }
+	export interface BubbleChartOptions extends ChartOptions<'bubble'>, ScatterplotOptionBase { }
 
 	//#endregion
 

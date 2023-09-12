@@ -2252,10 +2252,9 @@ declare module 'azdata' {
 
 	//#region Bar/Horizontal Bar charts
 
-	/**
-	 * Data for a bar chart, either vertical (chartType = 'bar') or horizontal (chartType = 'horizontalBar').
-	 */
-	export interface BarChartData extends ChartData<'bar' | 'horizontalBar'> {
+	export interface BarChartDataSet extends ChartDataSet<Chart1DPoint | number> { }
+
+	export interface BarChartDataBase {
 		datasets: BarChartDataSet[];
 
 		/**
@@ -2264,14 +2263,32 @@ declare module 'azdata' {
 		labels: string[];
 	}
 
-	export interface BarChartDataSet extends ChartDataSet<Chart1DPoint | number> { }
-
-	export interface BarChartOptions extends ChartOptions<'bar' | 'horizontalBar'> {
+	export interface BarChartOptionsBase {
 		scales?: {
 			x?: ScaleOptions;
 			y?: ScaleOptions;
 		}
 	}
+
+	/**
+	 * Data for a vertical bar chart
+	 */
+	export interface BarChartData extends ChartData<'bar'>, BarChartDataBase { }
+
+	/**
+	 * Options for a vertical bar chart
+	 */
+	export interface BarChartOptions extends ChartOptions<'bar'>, BarChartOptionsBase { }
+
+	/**
+	 * Data for a horizontal bar chart
+	 */
+	export interface HorizontalBarChartData extends ChartData<'horizontalBar'>, BarChartDataBase { }
+
+	/**
+	 * Options for a horizontal bar chart
+	 */
+	export interface HorizontalBarChartOptions extends ChartOptions<'horizontalBar'>, BarChartOptionsBase { }
 
 	//#endregion
 
@@ -2280,15 +2297,11 @@ declare module 'azdata' {
 	/**
 	 * Data for a line chart
 	 */
-	export interface LineChartData extends ChartData<'line'> {
-		datasets: BarChartDataSet[];
+	export interface LineChartData extends ChartData<'line'>, BarChartDataBase { }
 
-		/**
-		 * Labels for the base axis.  Only data that aligns with a label is shown.  If there are fewer labels than data, then not all data is displayed; if there are more labels than data, then empty chart entries are appended
-		 */
-		labels: string[];
-	}
-
+	/**
+	 * Options for a line chart
+	 */
 	export interface LineChartOptions extends ChartOptions<'line'> {
 		indexAxis?: string;
 		cubicInterpolationMode?: 'default' | 'monotone';
@@ -2307,14 +2320,11 @@ declare module 'azdata' {
 
 	//#region Pie/Doughnut charts
 
-	/**
-	 * Data for a either a pie chart or a doughnut chart.  These are the same, but with different default values for the `cutout` option.
-	 */
-	export interface PieChartData extends ChartData<'pie' | 'doughnut'> {
+	export interface PieChartDataBase {
 		dataset: ChartDataEntry[];
 	}
 
-	export interface PieChartOptions extends ChartOptions<'pie' | 'doughnut'> {
+	export interface PieChartOptionsBase {
 		circumference?: number;
 		/**
 		 * Size of the cutout for a pie/doughnut chart.  Pie chart defaults to 0.  Doughnut chart defaults to 50%.
@@ -2323,6 +2333,26 @@ declare module 'azdata' {
 		radius?: number | string;
 		rotation?: number;
 	}
+
+	/**
+	 * Data for a Pie chart
+	 */
+	export interface PieChartData extends ChartData<'pie'>, PieChartDataBase { }
+
+	/**
+	 * Options for a Pie chart
+	 */
+	export interface PieChartOptions extends ChartOptions<'pie'>, PieChartOptionsBase { }
+
+	/**
+	 * Data for a Doughnut chart
+	 */
+	export interface DoughnutChartData extends ChartData<'doughnut'>, PieChartDataBase { }
+
+	/**
+	 * Options for a Doughnut chart
+	 */
+	export interface DoughtChartOptions extends ChartOptions<'doughnut'>, PieChartOptionsBase { }
 
 	//#endregion
 

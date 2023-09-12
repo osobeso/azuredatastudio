@@ -2305,11 +2305,11 @@ class ChartComponentWrapper<TChartType extends azdata.ChartType, TData extends a
 	}
 
 	public set data(v: any) {
-		this.setProperty('configuration', v);
+		this.setProperty('data', v);
 	}
 
 	public get data(): any {
-		return this.properties['configuration'];
+		return this.properties['data'];
 	}
 
 	public get onDidClick(): vscode.Event<azdata.ChartClickEvent> {

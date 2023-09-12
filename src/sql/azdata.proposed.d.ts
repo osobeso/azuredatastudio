@@ -2352,7 +2352,7 @@ declare module 'azdata' {
 	/**
 	 * Options for a Doughnut chart
 	 */
-	export interface DoughtChartOptions extends ChartOptions<'doughnut'>, PieChartOptionsBase { }
+	export interface DoughnutChartOptions extends ChartOptions<'doughnut'>, PieChartOptionsBase { }
 
 	//#endregion
 

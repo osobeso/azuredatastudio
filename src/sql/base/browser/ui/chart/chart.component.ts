@@ -19,7 +19,7 @@ export interface BarDataSet {
 	selector: 'chart-component',
 	templateUrl: decodeURI(require.toUrl('./chart.component.html'))
 })
-export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions> extends Disposable {
+export class Chart<TChartType extends azdata.ChartType, TData extends azdata.ChartData<TChartType>, TOptions extends azdata.ChartOptions<TChartType>> extends Disposable {
 	private _chartId: string;
 	private _type: azdata.ChartType;
 	private _data: chartjs.ChartData;
@@ -132,7 +132,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 		}
 	}
 
-	private convert(val: azdata.ChartData<TOptions>): chartjs.ChartData {
+	private convert(val: azdata.ChartData<TChartType>): chartjs.ChartData {
 		const result: chartjs.ChartData = {
 			datasets: []
 		}
@@ -142,7 +142,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 			case 'horizontalBar': // should've been replaced with 'bar' by this point, but inlcuded case here for safety
 			case 'line':
 				{
-					const data = <azdata.BarChartData>val;
+					const data = <azdata.BarChartData><unknown>val;
 					for (let set of data.datasets) {
 						result.datasets.push({
 							data: set.data.map(entry => typeof entry === 'number' ? entry : entry.x),
@@ -158,7 +158,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 			case 'pie':
 			case 'doughnut':
 				{
-					const data = <azdata.PieChartData>val;
+					const data = <azdata.PieChartData><unknown>val;
 
 					result.datasets.push({
 						data: data.dataset.map(entry => typeof entry.value === 'number' ? entry.value : entry.value.x),
@@ -171,7 +171,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 				}
 			case 'scatter':
 				{
-					const data = <azdata.ScatterplotData>val;
+					const data = <azdata.ScatterplotData><unknown>val;
 
 					for (let set of data.datasets) {
 						result.datasets.push({
@@ -186,7 +186,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 				}
 			case 'bubble':
 				{
-					const data = <azdata.BubbleChartData>val;
+					const data = <azdata.BubbleChartData><unknown>val;
 
 					for (let set of data.datasets) {
 						result.datasets.push({
@@ -201,7 +201,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 				}
 			case 'polarArea':
 				{
-					const data = <azdata.PolarAreaChartData>val;
+					const data = <azdata.PolarAreaChartData><unknown>val;
 
 					result.datasets.push({
 						data: data.dataset.map(entry => typeof entry.value === 'number' ? entry.value : entry.value.x),
@@ -214,7 +214,7 @@ export class Chart<TData extends azdata.ChartData<TOptions>, TOptions extends az
 				}
 			case 'radar':
 				{
-					const data = <azdata.RadarChartData>val;
+					const data = <azdata.RadarChartData><unknown>val;
 
 					for (let set of data.datasets) {
 						result.datasets.push({

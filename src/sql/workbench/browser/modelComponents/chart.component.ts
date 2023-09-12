@@ -15,12 +15,12 @@ import { ILogService } from 'vs/platform/log/common/log';
 	templateUrl: decodeURI(require.toUrl('./chart.component.html'))
 })
 
-export default class ChartComponent<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions> extends ComponentBase<azdata.ChartComponentProperties<TData, TOptions>> implements IComponent, OnDestroy, AfterViewInit {
+export default class ChartComponent<TChartType extends azdata.ChartType, TData extends azdata.ChartData<TChartType>, TOptions extends azdata.ChartOptions<TChartType>> extends ComponentBase<azdata.ChartComponentProperties<TChartType, TData, TOptions>> implements IComponent, OnDestroy, AfterViewInit {
 
 	@Input() descriptor: IComponentDescriptor;
 	@Input() modelStore: IModelStore;
 
-	@ViewChild(Chart) private _chart: Chart<TData, TOptions>;
+	@ViewChild(Chart) private _chart: Chart<TChartType, TData, TOptions>;
 
 	constructor(
 		@Inject(forwardRef(() => ChangeDetectorRef)) changeRef: ChangeDetectorRef,

@@ -290,9 +290,9 @@ class ModelBuilderImpl implements azdata.ModelBuilder {
 		return builder;
 	}
 
-	chart<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions>(): azdata.ComponentBuilder<azdata.ChartComponent<TData, TOptions>, azdata.ChartComponentProperties<TData, TOptions>> {
+	chart<TChartType extends azdata.ChartType, TData extends azdata.ChartData<TChartType>, TOptions extends azdata.ChartOptions<TChartType>>(): azdata.ComponentBuilder<azdata.ChartComponent<TChartType, TData, TOptions>, azdata.ChartComponentProperties<TChartType, TData, TOptions>> {
 		let id = this.getNextComponentId();
-		let builder: ComponentBuilderImpl<azdata.ChartComponent<TData, TOptions>, azdata.ChartComponentProperties<TData, TOptions>> = this.getComponentBuilder(new ChartComponentWrapper<TData, TOptions>(this._proxy, this._handle, id, this.logService), id);
+		let builder: ComponentBuilderImpl<azdata.ChartComponent<TChartType, TData, TOptions>, azdata.ChartComponentProperties<TChartType, TData, TOptions>> = this.getComponentBuilder(new ChartComponentWrapper<TChartType, TData, TOptions>(this._proxy, this._handle, id, this.logService), id);
 		this._componentBuilders.set(id, builder);
 		return builder;
 	}
@@ -2280,7 +2280,7 @@ class GroupContainerComponentWrapper extends ComponentWrapper implements azdata.
 	}
 }
 
-class ChartComponentWrapper<TData extends azdata.ChartData<TOptions>, TOptions extends azdata.ChartOptions> extends ComponentWrapper implements azdata.ChartComponent<TData, TOptions> {
+class ChartComponentWrapper<TChartType extends azdata.ChartType, TData extends azdata.ChartData<TChartType>, TOptions extends azdata.ChartOptions<TChartType>> extends ComponentWrapper implements azdata.ChartComponent<TChartType, TData, TOptions> {
 	constructor(proxy: MainThreadModelViewShape, handle: number, id: string, logService: ILogService) {
 		super(proxy, handle, ModelComponentTypes.Chart, id, logService);
 		this.properties = {};
